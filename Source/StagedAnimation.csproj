@@ -74,6 +74,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModuleAnimateGenericExtra.cs" />
     <Compile Include="ModuleStagedAnimation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
