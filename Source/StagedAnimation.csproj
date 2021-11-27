@@ -41,41 +41,52 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <Private>False</Private>
+      <HintPath>D:\Kerbal Space Program\1.10.1-rss\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="UnityEngine">
       <Private>False</Private>
+      <HintPath>D:\Kerbal Space Program\1.10.1-rss\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
       <Private>False</Private>
+      <HintPath>D:\Kerbal Space Program\1.10.1-rss\KSP_x64_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <Private>False</Private>
+      <HintPath>D:\Kerbal Space Program\1.10.1-rss\KSP_x64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <Private>False</Private>
+      <HintPath>D:\Kerbal Space Program\1.10.1-rss\KSP_x64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <Private>False</Private>
+      <HintPath>D:\Kerbal Space Program\1.10.1-rss\KSP_x64_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
       <Private>False</Private>
+      <HintPath>D:\Kerbal Space Program\1.10.1-rss\KSP_x64_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <Private>False</Private>
+      <HintPath>D:\Kerbal Space Program\1.10.1-rss\KSP_x64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <Private>False</Private>
+      <HintPath>D:\Kerbal Space Program\1.10.1-rss\KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VehiclesModule">
       <Private>False</Private>
+      <HintPath>D:\Kerbal Space Program\1.10.1-rss\KSP_x64_Data\Managed\UnityEngine.VehiclesModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ModuleAnimateGenericExtra.cs" />
     <Compile Include="ModuleStagedAnimation.cs" />
+    <Compile Include="PartEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
