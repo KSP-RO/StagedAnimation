@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace StagedAnimation
 {
-    public class ModuleStagedAnimation : PartModule, IScalarModule
+	public class ModuleStagedAnimation : PartModule, IScalarModule
 	{
 		[KSPField]
 		public string animationName = "";
@@ -15,82 +16,112 @@ namespace StagedAnimation
 		public string moduleID = "stagedAnimation";
 
 
-		[KSPField(isPersistant = true)]
+		[KSPField( isPersistant = true )]
 		public bool hasPlayed = false;
 
 		[KSPField]
 		public string fxGroupName = "decouple";
 
 		private FXGroup fx;
-		protected Animation anim;
-				
+		protected Animation[] anims;
+
 		public void PlayStagedAnim()
 		{
-			if ((object)anim != null && !hasPlayed )
+			if( this.anims != null && !this.hasPlayed )
 			{
-				anim.Play(animationName);
-				OnMoving.Fire(0f, 1f);
+				for( int i = 0; i < this.anims.Length; i++ )
+				{
+					Debug.Log( "ANIMKAT playing anim on " + this.anims[i].gameObject.name + "" );
+					this.anims[i].Play( this.animationName );
+				}
+				this.OnMoving.Fire( 0f, 1f );
 			}
 		}
 
 
 		public override void OnAwake()
 		{
-			this.OnMovingEvent = new EventData<float, float>("ModuleStagedAnimation.OnMovingEvent");
-			this.OnStoppedEvent = new EventData<float>("ModuleAnimateDecoupler.OnStoppedEvent");
+			this.OnMovingEvent = new EventData<float, float>( "ModuleStagedAnimation.OnMovingEvent" );
+			this.OnStoppedEvent = new EventData<float>( "ModuleAnimateDecoupler.OnStoppedEvent" );
 
-			fx = part.findFxGroup(fxGroupName);
-			if (fx == null)
+			this.fx = this.part.findFxGroup( this.fxGroupName );
+			if( this.fx == null )
 			{
-				Debug.LogError("ModuleStagedAnimation: Cannot find fx group " + fxGroupName);
+				Debug.LogError( "ModuleStagedAnimation: Cannot find fx group " + this.fxGroupName );
 			}
 		}
 
-		public override void OnStart(StartState state)
+		public override void OnStart( StartState state )
 		{
-			if (part.stagingIcon == string.Empty && overrideStagingIconIfBlank)
+			if( this.part.stagingIcon == string.Empty && this.overrideStagingIconIfBlank )
 			{
-				part.stagingIcon = "DECOUPLER_VERT";
+				this.part.stagingIcon = "DECOUPLER_VERT";
 			}
 
-			if (hasPlayed)
+			if( this.hasPlayed )
 			{
-				FXGroup fx = part.findFxGroup("activate");
-				if (fx != null)
+				FXGroup fx = part.findFxGroup( "activate" );
+				if( fx != null )
 				{
-					fx.setActive(false);
+					fx.setActive( false );
 				}
 			}
 
 			//GameEvents.onVesselWasModified.Add(OnVesselWasModified);
 
-			base.OnStart(state);
-			if (!string.IsNullOrEmpty(animationName))
+			base.OnStart( state );
+			if( !string.IsNullOrEmpty( animationName ) )
 			{
-				anim = part.FindModelAnimators(animationName).FirstOrDefault();
-				if ((object)this.anim == null)
+				List<Transform> modelNodes = this.part.FindModelNodes();
+
+				// find all animation modules
+				List<Animation> foundAnims = new List<Animation>();
+				for( int i = 0; i < modelNodes.Count; i++ )
+                {
+					Part.FindModelComponents<Animation>( modelNodes[i], string.Empty, foundAnims ); // this does a recursive search.
+				}
+
+				// get the animations that match the specified name.
+				List<Animation> matchedAnims = new List<Animation>();
+				for( int i = 0; i < foundAnims.Count; i++ )
+                {
+					if( foundAnims[i].GetClip( this.animationName ) == null )
+                    {
+						continue;
+                    }
+
+					matchedAnims.Add( foundAnims[i] );
+                }
+
+				this.anims = foundAnims.ToArray();
+				if( this.anims == null )
 				{
-					Debug.Log("ModuleStagedAnimation: Animation " + animationName + " not found");
+					Debug.LogWarning( "ModuleStagedAnimation: Animation " + this.animationName + " not found" );
 				}
 				else
 				{
-					this.anim[animationName].layer = layer;
-					// If animation already played then set animation to end.
-					if (this.hasPlayed)
+					Debug.Log( $"ANIMKAT found {this.anims.Length} anims on {this.gameObject.name}" );
+					for( int i = 0; i < this.anims.Length; i++ )
 					{
-						this.anim[animationName].normalizedTime = 1f;
+
+						this.anims[i][animationName].layer = layer;
+						// If animation already played then set animation to end.
+						if( this.hasPlayed )
+						{
+							this.anims[i][animationName].normalizedTime = 1f;
+						}
 					}
 				}
 			}
 			else
 			{
-				anim = null;
+				this.anims = null;
 			}
 		}
 
 		public override void OnActive()
 		{
-			PlayStagedAnim();
+			this.PlayStagedAnim();
 		}
 
 		// TODO ideally, check if we're on a new vessel and fire the anim?
@@ -126,7 +157,7 @@ namespace StagedAnimation
 		{
 			get
 			{
-				return anim[animationName].length / anim[animationName].speed;
+				return anims[0][animationName].length / anims[0][animationName].speed;
 			}
 		}
 
@@ -175,11 +206,11 @@ namespace StagedAnimation
 		//
 		public bool IsMoving()
 		{
-			if (!string.IsNullOrEmpty(animationName))
+			if( !string.IsNullOrEmpty( animationName ) )
 			{
-				if ((object)anim != null)
+				if( anims != null )
 				{
-					return anim.IsPlaying(animationName);
+					return anims[0].IsPlaying( animationName );
 				}
 				else
 				{
@@ -192,15 +223,15 @@ namespace StagedAnimation
 			}
 		}
 
-		public void SetScalar(float t)
+		public void SetScalar( float t )
 		{
 		}
 
-		public void SetUIRead(bool state)
+		public void SetUIRead( bool state )
 		{
 		}
 
-		public void SetUIWrite(bool state)
+		public void SetUIWrite( bool state )
 		{
 		}
 	}
