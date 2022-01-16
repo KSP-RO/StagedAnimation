@@ -40,10 +40,10 @@ namespace StagedAnimation
 			this.OnStoppedEvent = new EventData<float>("ModuleAnimateDecoupler.OnStoppedEvent");
 
 			fx = part.findFxGroup(fxGroupName);
-			if (fx == null)
-			{
-				Debug.LogError("ModuleStagedAnimation: Cannot find fx group " + fxGroupName);
-			}
+			//if (fx == null)
+			//{
+			//	Debug.LogError("ModuleStagedAnimation: Cannot find fx group " + fxGroupName);
+			//}
 		}
 
 		public override void OnStart(StartState state)
